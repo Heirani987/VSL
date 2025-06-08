@@ -16,55 +16,75 @@ import com.vsl.data.db.Patient
 @Composable
 fun PatientScreen(
     viewModel: PatientViewModel,
-    onImportExcel: () -> Unit // Un seul paramètre pour le bouton d'import
+    onImportExcel: () -> Unit
 ) {
-    val patients by viewModel.patients.collectAsState()
+    val patients by viewModel.uniquePatients.collectAsState()
+    val importResult by viewModel.importResult.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Liste des patients",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        // Bouton pour importer un fichier Excel
-        Button(
-            onClick = onImportExcel,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        ) {
-            Text("Importer Excel")
-        }
-
-        // Formulaire d'ajout de patient (garde ta logique existante ici)
-        PatientForm(
-            onSubmit = { patient ->
-                viewModel.insert(patient)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
-
-        if (patients.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Aucun patient à afficher.")
+    // Affichage du Snackbar après import
+    LaunchedEffect(importResult) {
+        when (importResult) {
+            true -> {
+                snackbarHostState.showSnackbar("Import Excel réussi 🎉")
+                viewModel.clearImportResult()
             }
-        } else {
-            LazyColumn {
-                items(patients) { patient ->
-                    PatientListItem(
-                        patient = patient,
-                        onLongClick = { viewModel.delete(patient) }
-                    )
+            false -> {
+                snackbarHostState.showSnackbar("Échec de l'import Excel")
+                viewModel.clearImportResult()
+            }
+            null -> {}
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .padding(paddingValues)
+        ) {
+            Text(
+                text = "Liste des patients",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Button(
+                onClick = onImportExcel,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                Text("Importer Excel")
+            }
+
+            // Formulaire d'ajout de patient (garde ta logique existante ici)
+            PatientForm(
+                onSubmit = { patient -> viewModel.insert(patient) },
+                existingPatientNames = patients.map { it.nom },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
+
+            if (patients.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Aucun patient à afficher.")
+                }
+            } else {
+                LazyColumn {
+                    items(patients) { patient ->
+                        PatientListItem(
+                            patient = patient,
+                            onLongClick = { viewModel.delete(patient) }
+                        )
+                    }
                 }
             }
         }
@@ -80,7 +100,7 @@ fun PatientListItem(
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
-                onClick = {}, // Action sur clic simple (à personnaliser si besoin)
+                onClick = {}, // Action simple clic (facultatif)
                 onLongClick = { onLongClick(patient) }
             )
             .padding(vertical = 8.dp)

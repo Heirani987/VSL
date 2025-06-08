@@ -1,18 +1,26 @@
 package com.vsl.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vsl.data.db.Patient
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatientForm(
     onSubmit: (Patient) -> Unit,
+    existingPatientNames: List<String>,
     modifier: Modifier = Modifier
 ) {
     var nom by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
     var dateNaissance by remember { mutableStateOf("") }
     var dep by remember { mutableStateOf("") }
     var da by remember { mutableStateOf("") }
@@ -31,11 +39,84 @@ fun PatientForm(
     var pkCentreSoin by remember { mutableStateOf("") }
     var tf by remember { mutableStateOf("") }
 
+    // Filtrage pour l'autocomplete
+    val filteredNames = remember(nom, existingPatientNames) {
+        existingPatientNames.filter { it.contains(nom, ignoreCase = true) && it.isNotBlank() }
+    }
+
+    val scrollState = rememberScrollState()
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        OutlinedTextField(value = nom, onValueChange = { nom = it }, label = { Text("Nom") }, modifier = Modifier.fillMaxWidth())
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Champ nom avec auto-complétion
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it }
+            ) {
+                OutlinedTextField(
+                    value = nom,
+                    onValueChange = {
+                        nom = it
+                        expanded = it.isNotBlank() && filteredNames.isNotEmpty()
+                    },
+                    label = { Text("Nom") },
+                    modifier = Modifier
+                        .weight(1f)
+                        .menuAnchor(),
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
+                    singleLine = true
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded && filteredNames.isNotEmpty(),
+                    onDismissRequest = { expanded = false }
+                ) {
+                    filteredNames.forEach { name ->
+                        DropdownMenuItem(
+                            text = { Text(name) },
+                            onClick = {
+                                nom = name
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.width(8.dp))
+            IconButton(
+                onClick = {
+                    // Réinitialise tous les champs sauf le nom
+                    dateNaissance = ""
+                    dep = ""
+                    da = ""
+                    validiteDaDu = ""
+                    validiteDaAu = ""
+                    transportDu = ""
+                    transportAu = ""
+                    adresseGeographique = ""
+                    trajet = ""
+                    pointPcArrivee = ""
+                    complementAdresse = ""
+                    tel = ""
+                    dn = ""
+                    pk = ""
+                    kmSuppl = ""
+                    pkCentreSoin = ""
+                    tf = ""
+                    nom = ""
+                },
+                modifier = Modifier.size(48.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Nouveau patient", tint = MaterialTheme.colorScheme.primary)
+            }
+        }
+
         OutlinedTextField(value = dateNaissance, onValueChange = { dateNaissance = it }, label = { Text("Date de naissance") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = dep, onValueChange = { dep = it }, label = { Text("Département") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = da, onValueChange = { da = it }, label = { Text("DA") }, modifier = Modifier.fillMaxWidth())
@@ -78,10 +159,25 @@ fun PatientForm(
                         tf = tf
                     )
                 )
-                // Réinitialise le formulaire si besoin
-                nom = ""; dateNaissance = ""; dep = ""; da = ""; validiteDaDu = ""; validiteDaAu = ""
-                transportDu = ""; transportAu = ""; adresseGeographique = ""; trajet = ""; pointPcArrivee = ""; complementAdresse = ""
-                tel = ""; dn = ""; pk = ""; kmSuppl = ""; pkCentreSoin = ""; tf = ""
+                // Réinitialise le formulaire
+                nom = ""
+                dateNaissance = ""
+                dep = ""
+                da = ""
+                validiteDaDu = ""
+                validiteDaAu = ""
+                transportDu = ""
+                transportAu = ""
+                adresseGeographique = ""
+                trajet = ""
+                pointPcArrivee = ""
+                complementAdresse = ""
+                tel = ""
+                dn = ""
+                pk = ""
+                kmSuppl = ""
+                pkCentreSoin = ""
+                tf = ""
             },
             modifier = Modifier.fillMaxWidth()
         ) {

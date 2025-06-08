@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vsl.data.db.Patient
 import com.vsl.data.db.PatientRepository
-import com.vsl.util.ExcelUtil
+import com.vsl.utils.ExcelUtil
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -16,6 +16,18 @@ class PatientViewModel(
 
     val patients: StateFlow<List<Patient>> = repository.getAllPatients()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Filtrage du dernier noms de patients uniques
+    val uniquePatients: StateFlow<List<Patient>> = patients
+        .map { list ->
+            list.groupBy { it.nom.trim().uppercase() }
+                .map { (_, patientsWithSameName) -> patientsWithSameName.last() }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Permet d’afficher un message de retour après import
+    private val _importResult = MutableStateFlow<Boolean?>(null)
+    val importResult: StateFlow<Boolean?> = _importResult.asStateFlow()
 
     fun insert(patient: Patient) {
         viewModelScope.launch {
@@ -35,11 +47,23 @@ class PatientViewModel(
         }
     }
 
-    // Nouvelle méthode pour importer les patients depuis Excel
     fun importPatientsFromExcel(contentResolver: ContentResolver, fileUri: Uri) {
         viewModelScope.launch {
-            val imported = ExcelUtil.readPatientsFromPlanningSheet(contentResolver, fileUri)
-            imported.forEach { repository.insert(it) }
+            try {
+                val imported = ExcelUtil.readPatientsFromPlanningSheet(contentResolver, fileUri)
+                if (imported.isNotEmpty()) {
+                    repository.insertAll(imported) // insertAll (en masse) recommandé
+                    _importResult.value = true
+                } else {
+                    _importResult.value = false
+                }
+            } catch (e: Exception) {
+                _importResult.value = false
+            }
         }
+    }
+
+    fun clearImportResult() {
+        _importResult.value = null
     }
 }
