@@ -1,0 +1,142 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "f7dae4d2fa571522b88ddc937628f7ef",
+    "entities": [
+      {
+        "tableName": "Patient",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nom` TEXT NOT NULL, `dateNaissance` TEXT NOT NULL, `dep` TEXT NOT NULL, `da` TEXT NOT NULL, `validiteDaDu` TEXT NOT NULL, `validiteDaAu` TEXT NOT NULL, `transportDu` TEXT NOT NULL, `transportAu` TEXT NOT NULL, `adresseGeographique` TEXT NOT NULL, `trajet` TEXT NOT NULL, `pointPcArrivee` TEXT NOT NULL, `complementAdresse` TEXT NOT NULL, `tel` TEXT NOT NULL, `dn` TEXT NOT NULL, `pk` TEXT NOT NULL, `kmSuppl` TEXT NOT NULL, `pkCentreSoin` TEXT NOT NULL, `tf` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nom",
+            "columnName": "nom",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateNaissance",
+            "columnName": "dateNaissance",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dep",
+            "columnName": "dep",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "da",
+            "columnName": "da",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "validiteDaDu",
+            "columnName": "validiteDaDu",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "validiteDaAu",
+            "columnName": "validiteDaAu",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transportDu",
+            "columnName": "transportDu",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transportAu",
+            "columnName": "transportAu",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "adresseGeographique",
+            "columnName": "adresseGeographique",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trajet",
+            "columnName": "trajet",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pointPcArrivee",
+            "columnName": "pointPcArrivee",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "complementAdresse",
+            "columnName": "complementAdresse",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tel",
+            "columnName": "tel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dn",
+            "columnName": "dn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pk",
+            "columnName": "pk",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kmSuppl",
+            "columnName": "kmSuppl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pkCentreSoin",
+            "columnName": "pkCentreSoin",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tf",
+            "columnName": "tf",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f7dae4d2fa571522b88ddc937628f7ef')"
+    ]
+  }
+}
