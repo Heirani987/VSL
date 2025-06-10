@@ -1,4 +1,4 @@
-package com.vsl.ui
+package com.vsl.ui.patients
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

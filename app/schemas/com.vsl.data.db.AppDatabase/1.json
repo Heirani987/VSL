@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f7dae4d2fa571522b88ddc937628f7ef",
+    "identityHash": "074be8f8be3faf116095bd89186facbc",
     "entities": [
       {
         "tableName": "Patient",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nom` TEXT NOT NULL, `dateNaissance` TEXT NOT NULL, `dep` TEXT NOT NULL, `da` TEXT NOT NULL, `validiteDaDu` TEXT NOT NULL, `validiteDaAu` TEXT NOT NULL, `transportDu` TEXT NOT NULL, `transportAu` TEXT NOT NULL, `adresseGeographique` TEXT NOT NULL, `trajet` TEXT NOT NULL, `pointPcArrivee` TEXT NOT NULL, `complementAdresse` TEXT NOT NULL, `tel` TEXT NOT NULL, `dn` TEXT NOT NULL, `pk` TEXT NOT NULL, `kmSuppl` TEXT NOT NULL, `pkCentreSoin` TEXT NOT NULL, `tf` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nom` TEXT NOT NULL, `dateNaissance` TEXT NOT NULL, `dep` TEXT NOT NULL, `da` TEXT NOT NULL, `validiteDaDu` TEXT NOT NULL, `validiteDaAu` TEXT NOT NULL, `transportDu` TEXT NOT NULL, `transportAu` TEXT NOT NULL, `adresseGeographique` TEXT NOT NULL, `trajet` TEXT NOT NULL, `pointPcArrivee` TEXT NOT NULL, `complementAdresse` TEXT NOT NULL, `tel` TEXT NOT NULL, `dn` TEXT NOT NULL, `pk` TEXT NOT NULL, `kmSuppl` TEXT NOT NULL, `pkCentreSoin` TEXT NOT NULL, `tf` TEXT NOT NULL, `isLocallyModified` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -121,6 +121,12 @@
             "columnName": "tf",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "isLocallyModified",
+            "columnName": "isLocallyModified",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -136,7 +142,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f7dae4d2fa571522b88ddc937628f7ef')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '074be8f8be3faf116095bd89186facbc')"
     ]
   }
 }

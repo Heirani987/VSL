@@ -13,6 +13,9 @@ interface PatientDao {
     @Query("SELECT * FROM Patient ORDER BY nom")
     fun getAllPatients(): Flow<List<Patient>>
 
+    @Query("SELECT * FROM Patient")
+    suspend fun getAllPatientsList(): List<Patient>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(patient: Patient): Long
 

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Patient(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     val nom: String = "",
     val dateNaissance: String = "",
     val dep: String = "",
@@ -23,5 +23,11 @@ data class Patient(
     val pk: String = "",
     val kmSuppl: String = "",
     val pkCentreSoin: String = "",
-    val tf: String = ""
+    val tf: String = "",
+    val isLocallyModified: Boolean = false // true = non exporté, false = exporté
 )
+
+/**
+ * Fournit une instance de Patient vide pour les écrans de création.
+ */
+fun emptyPatient() = Patient()

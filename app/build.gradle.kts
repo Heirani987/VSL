@@ -49,6 +49,8 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
     implementation(libs.compose.foundation)
+    implementation(libs.material) // <= Ajouté
+    implementation(libs.material.icons.extended) // <= Ajouté
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.room.runtime)
@@ -62,4 +64,5 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     // Optionnel: tooling preview/debug
     debugImplementation(libs.ui.tooling)
+    implementation(libs.datastore.preferences)
 }
